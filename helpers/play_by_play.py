@@ -1,10 +1,6 @@
 import json
 import pandas as pd
-import urllib3
 import requests
-import sqlalchemy
-import psycopg2
-from tqdm import tqdm
 
 GAME_ID = '0021901315'
 
