@@ -165,6 +165,25 @@ def classify_teams(json, all_images):
                 json[image_id][player_id]['team'] = int(clusters[i])
     return json
 
+#histograms show more confidence in finding hips than ankles so will use average of hips to get center of mass x,y
+def center_of_mass(json):
+    for image_id in json:
+        for player_id in json[image_id]:
+            lhip_x = json[image_id][player_id]['keypoints'][33]
+            lhip_y = json[image_id][player_id]['keypoints'][34]
+            #lhip_conf = json[image_id][player_id]['keypoints'][35]
+
+            rhip_x = json[image_id][player_id]['keypoints'][36]
+            rhip_y = json[image_id][player_id]['keypoints'][37]
+            #rhip_conf = json[image_id][player_id]['keypoints'][38]
+
+            hip_x_avg = (lhip_x + rhip_x) / 2.0
+            hip_y_avg = (lhip_y + rhip_x) / 2.0
+
+            json[image_id][player_id]['x'] = hip_x_avg
+            json[image_id][player_id]['y'] = hip_y_avg
+    return json
+
 if __name__ == '__main__':
     #load in json results from alphapose
     with open('./data/alphapose-results.json') as input:
@@ -184,6 +203,9 @@ if __name__ == '__main__':
 
     #second clustering approach to classify the two teams on the court
     our_player_tracking = classify_teams(our_player_tracking, all_frames)
+
+    #calculate center of mass position for each player
+    our_player_tracking = center_of_mass(our_player_tracking)
 
     #export and pass along the final player tracking json output
     with open('./player_tracking_w_teams.json', 'w') as output:
