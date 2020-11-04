@@ -1,0 +1,64 @@
+{% extends 'tracking/base.html' %}
+
+{% block head %}
+<title> Basketball Tracking </title>
+<script>
+    $(document).ready(function(){
+        $('button').click(function(){
+            $('.alert').show()
+        })
+    });
+    </script>
+{% endblock %}
+
+{% block home_navbar %}
+<li class="nav-item active">
+    <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+</li>
+{% endblock %}
+
+{% block body %}
+
+    <div class="jumbotron">
+        <h1 class="display-4 text-center">Basketball Player Tracking</h1>
+        <p class="lead text-center">An open-source application to automatically tag and track players through the game.</p>
+    </div>
+
+    <form enctype="multipart/form-data" method="POST" action="{% url 'index' %}">
+        {% csrf_token %}
+        <div class="form-row text-center">
+            <div class="form-group col-md-4">
+                {{ form.email.errors }}
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.home_team.errors }}
+                {{ form.home_team.label_tag }}
+                {{ form.home_team }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.season.errors }}
+                {{ form.season.label_tag }}
+                {{ form.season }}
+            </div>
+        </div>
+        <div class="form-row text-center">
+            <div class="form-group col-md-12">
+                {{ form.videofile.errors }}
+                {{ form.videofile.label_tag }}
+                {{ form.videofile }}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg" value="Upload/">Analyze</button>
+            <br><br>
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                We will send you an email once your video is done processing!
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+{% extends 'tracking/base.html' %}
+
+{% block head %}
+<title> Basketball Tracking | Results</title>
+{% endblock %}
+
+{% block results_navbar %}
+<li class="nav-item active">
+    <a class="nav-link" href="{% url 'results' %}">Results</a>
+</li>
+{% endblock %}
+
+{% block body %}
+<video width='400' controls>
+<source src='{{ MEDIA_URL }}{{ videofile }}' type='video/mp4'>
+Your browser does not support the video tag.
+</video>
+
+<video width='400' controls>
+<source src='{{ MEDIA_URL }}{{ processed_videofile }}' type='video/mp4'>
+Your browser does not support the video tag.
+</video>
+{% endblock %}
