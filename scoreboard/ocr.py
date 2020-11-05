@@ -98,11 +98,11 @@ def processVideo(videoFile,network,frameRate):
     sec = 0
     frameId = 0
     currDict = {}
+    cap = cv2.VideoCapture(videoFile)
 
     #loading video frame by frame at specified fps
     while cap.isOpened(): 
         sec = round(sec + frameRate,2)
-        cap = cv2.VideoCapture(videoFile)
         cap.set(cv2.CAP_PROP_POS_MSEC, sec*1000)
         hasFrames, image = cap.read()
         if hasFrames():
