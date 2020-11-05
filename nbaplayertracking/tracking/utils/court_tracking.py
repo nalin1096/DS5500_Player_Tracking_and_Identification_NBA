@@ -99,7 +99,9 @@ def get_court_tracking(frames_dir, output_dir):
     final = court_templates(frames_dir)
     result = court_features(final, threshold, values, innerkeys)
 
-    #Converting to JSON
+    # Converting to JSON
     with open(os.path.join(output_dir, "court_tracking_results.json"), "w") as outfile:  
         json.dump(result, outfile)
+    return
+
 

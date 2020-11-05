@@ -1,6 +1,9 @@
 import uuid
+import os
 from django.db import models
 
+def generate_dirpath(self):
+    return 'tracking/tracking_results/%s' % (os.path.splitext(os.path.basename(self.videofile.url))[0])
 
 class Video(models.Model):
     NBA_SEASONS = [
@@ -51,7 +54,9 @@ class Video(models.Model):
     season = models.CharField(max_length=9, choices=NBA_SEASONS, default='2018-2019')
     home_team = models.CharField(max_length=3, choices=NBA_TEAMS, default='LAL')
     videofile = models.FileField(upload_to='tracking/videos/', null=True, verbose_name="")
-    processed_videofile = models.FileField(upload_to='tracking/videos/', null=True, verbose_name="", max_length=1000)
+    team_classification_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
+    court_tracking_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
+    ocr_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
 
     def __str__(self):
         return str(self.videofile)

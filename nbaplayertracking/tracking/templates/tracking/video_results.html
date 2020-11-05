@@ -15,9 +15,9 @@
 <source src='{{ MEDIA_URL }}{{ videofile }}' type='video/mp4'>
 Your browser does not support the video tag.
 </video>
+<br>
 
-<video width='400' controls>
-<source src='{{ MEDIA_URL }}{{ processed_videofile }}' type='video/mp4'>
-Your browser does not support the video tag.
-</video>
+<a href="{{ MEDIA_URL }}{{ court_tracking_results }}" download>Court Tracking Results</a> <br>
+<a href="{{ MEDIA_URL }}{{ ocr_results }}" download>OCR Results</a>
+
 {% endblock %}
