@@ -3,10 +3,13 @@ from celery.utils.log import get_task_logger
 
 from .models import Video
 
+from .utils import court_tracking, ocr, team_classification, helper
+
 import cv2
 import os
 import random
 import string
+from pathlib import Path
 from time import sleep
 
 from django.core.mail import send_mail
@@ -17,53 +20,24 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 @shared_task
-def send_email_task(id):
+def get_tracking(id):
+
     video_obj = Video.objects.get(id=id)
 
-    logger.info(settings.BASE_DIR)
     filepath = os.path.join(settings.BASE_DIR, video_obj.videofile.url[1:])
     filename = os.path.splitext(os.path.basename(filepath))[0]
 
-    outdir = os.path.dirname(filepath)
-    outfilename = filename + '_processed.mp4'
-    outfilepath = os.path.join(outdir, outfilename)
+    outdir = os.path.join(os.path.dirname(filepath), filename)
+    Path(outdir).mkdir(parents=True, exist_ok=True)
 
-    logger.info(filepath)
-    logger.info(video_obj.videofile.url)
-    logger.info(video_obj.email)
+    helper.preprocess_video(filepath, outdir)
 
-    cap = cv2.VideoCapture(filepath)
+    results_dir = os.path.join(settings.BASE_DIR, 'tracking_results', filename)
+    Path(results_dir).mkdir(parents=True, exist_ok=True)
 
-    ret, frame = cap.read()
-    logger.info('ret =', ret, 'W =', frame.shape[1], 'H =', frame.shape[0], 'channel =', frame.shape[2])
-
-    fps = 20.0
-    framesize = (frame.shape[1], frame.shape[0])
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-
-    out = cv2.VideoWriter(outfilepath, fourcc, fps, framesize, 0)
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-
-        # check for successfulness of cap.read()
-        if not ret: break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        frame = gray
-
-        # Save the video
-        out.write(frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    out.release()
-    cv2.destroyAllWindows()
-
-    video_obj.processed_videofile = os.path.join('tracking', 'videos', outfilename)
-    video_obj.results_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
+    # team_classification.get_team_classification(outdir, results_dir, logger)
+    court_tracking.get_court_tracking(outdir, results_dir)
+    ocr.get_ocr(outdir, results_dir)
 
     send_mail(
         'Your video is ready!',
@@ -73,5 +47,4 @@ def send_email_task(id):
         fail_silently=False,
     )
 
-    video_obj.save()
-    return
+    return 

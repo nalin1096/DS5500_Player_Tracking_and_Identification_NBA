@@ -1,3 +1,4 @@
+import os
 import json
 import numpy as np
 from collections import defaultdict
@@ -151,7 +152,7 @@ def cluster_players(frame, json, frame_id, model = None):
         clusters = model.predict(rows)
         return clusters
 
-def classify_teams(json, all_images):
+def classify_teams(json, all_frames):
     for image_id, image in zip(json, all_frames):
         if image_id == 'out0000001.png':
             model, clusters = cluster_players(image, json, image_id)
@@ -184,10 +185,11 @@ def center_of_mass(json):
             json[image_id][player_id]['y'] = hip_y_avg
     return json
 
-if __name__ == '__main__':
+def get_team_classification(frames_dir, output_dir, logger):
+
     #load in json results from alphapose
-    with open('./data/alphapose-results.json') as input:
-        jsonData = json.load(input)
+    with open(os.path.join(os.getcwd(), 'tracking/utils/alpha_pose/alphapose-results.json')) as f:
+        jsonData = json.load(f)
 
     #reform the json input into the desired structure
     our_player_tracking_all = reformat_json(jsonData)
@@ -196,7 +198,8 @@ if __name__ == '__main__':
     our_player_tracking = trim_low_confidence(our_player_tracking_all)
 
     #read in the frames split from FFmpeg on the video input as RGB
-    all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob('./test_images/*.png'))]
+    all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob(os.path.join(frames_dir, '*.png')))]
+    logger.info(os.path.join(frames_dir, '*.png'))
 
     #first clustering approach to distinguish the players from fans, refs, bench, etc.
     our_player_tracking = separate_players_and_noise(our_player_tracking, all_frames)
@@ -208,5 +211,5 @@ if __name__ == '__main__':
     our_player_tracking = center_of_mass(our_player_tracking)
 
     #export and pass along the final player tracking json output
-    with open('./player_tracking_w_teams.json', 'w') as output:
+    with open(os.path.join(output_dir, 'player_tracking_w_teams.json'), 'w') as output:
         json.dump(our_player_tracking, output)

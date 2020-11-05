@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 from .models import Video
 from .forms import VideoForm
-from .tasks import send_email_task
+from .tasks import get_tracking
 
 
 def index(request):
@@ -16,7 +16,7 @@ def index(request):
     if form.is_valid():
         new_video = form.save()
         print(new_video.id)
-        send_email_task.delay(new_video.id)
+        get_tracking.delay(new_video.id)
 
     context = {
         'videofile': videofile,
