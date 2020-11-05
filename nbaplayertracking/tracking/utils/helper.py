@@ -1,8 +1,9 @@
 import os
+import sys
 import ffmpeg
 
 def preprocess_video(video_file, out_folder):
-    (
+    out, err = (
         ffmpeg
         .input(video_file)
         .filter('fps', fps=25)

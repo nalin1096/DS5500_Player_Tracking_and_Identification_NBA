@@ -35,7 +35,8 @@ def get_tracking(id):
     results_dir = os.path.join(settings.BASE_DIR, 'media/tracking/tracking_results', filename)
     Path(results_dir).mkdir(parents=True, exist_ok=True)
 
-    # team_classification.get_team_classification(outdir, results_dir)
+    team_classification.get_team_classification(outdir, results_dir)
+    video_obj.player_tracking_file = os.path.join('tracking', 'tracking_results', filename, 'player_tracking_results.json')
     
     court_tracking.get_court_tracking(outdir, results_dir)
     video_obj.court_tracking_file = os.path.join('tracking', 'tracking_results', filename, 'court_tracking_results.json')

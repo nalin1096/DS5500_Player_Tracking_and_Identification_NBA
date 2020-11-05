@@ -32,5 +32,6 @@ def video_results(request, results_id):
     video_obj = Video.objects.get(results_id = results_id)
     return render(request, 'tracking/video_results.html', 
         {'videofile': video_obj.videofile,
+        'player_tracking_results': video_obj.player_tracking_file,
         'court_tracking_results': video_obj.court_tracking_file, 
         'ocr_results': video_obj.ocr_file})

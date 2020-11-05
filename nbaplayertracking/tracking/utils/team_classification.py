@@ -185,7 +185,7 @@ def center_of_mass(json):
             json[image_id][player_id]['y'] = hip_y_avg
     return json
 
-def get_team_classification(frames_dir, output_dir, logger):
+def get_team_classification(frames_dir, output_dir):
 
     #load in json results from alphapose
     with open(os.path.join(os.getcwd(), 'tracking/utils/alpha_pose/alphapose-results.json')) as f:
@@ -199,7 +199,6 @@ def get_team_classification(frames_dir, output_dir, logger):
 
     #read in the frames split from FFmpeg on the video input as RGB
     all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob(os.path.join(frames_dir, '*.png')))]
-    logger.info(os.path.join(frames_dir, '*.png'))
 
     #first clustering approach to distinguish the players from fans, refs, bench, etc.
     our_player_tracking = separate_players_and_noise(our_player_tracking, all_frames)
@@ -211,5 +210,5 @@ def get_team_classification(frames_dir, output_dir, logger):
     our_player_tracking = center_of_mass(our_player_tracking)
 
     #export and pass along the final player tracking json output
-    with open(os.path.join(output_dir, 'player_tracking_w_teams.json'), 'w') as output:
+    with open(os.path.join(output_dir, 'player_tracking_results.json'), 'w') as output:
         json.dump(our_player_tracking, output)
