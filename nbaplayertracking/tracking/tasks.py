@@ -32,12 +32,18 @@ def get_tracking(id):
 
     helper.preprocess_video(filepath, outdir)
 
-    results_dir = os.path.join(settings.BASE_DIR, 'tracking_results', filename)
+    results_dir = os.path.join(settings.BASE_DIR, 'media/tracking/tracking_results', filename)
     Path(results_dir).mkdir(parents=True, exist_ok=True)
 
-    # team_classification.get_team_classification(outdir, results_dir, logger)
+    # team_classification.get_team_classification(outdir, results_dir)
+    
     court_tracking.get_court_tracking(outdir, results_dir)
+    video_obj.court_tracking_file = os.path.join('tracking', 'tracking_results', filename, 'court_tracking_results.json')
+
     ocr.get_ocr(outdir, results_dir)
+    video_obj.ocr_file = os.path.join('tracking', 'tracking_results', filename, 'ocr_results.json')
+
+    video_obj.results_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
     send_mail(
         'Your video is ready!',
@@ -46,5 +52,7 @@ def get_tracking(id):
         [video_obj.email],
         fail_silently=False,
     )
+
+    video_obj.save()
 
     return 

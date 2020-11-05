@@ -121,3 +121,5 @@ def get_ocr(frames_dir, output_dir):
     #writing json file
     with open(os.path.join(output_dir, "ocr_results.json"), "w") as outfile:  
         json.dump(result, outfile)
+
+    return
