@@ -6,8 +6,6 @@ from hmmlearn import hmm
 from sklearn.cluster import KMeans
 from scipy import stats
 
-frames = []
-
 def calc_hist(img):
     '''calculates b,g,r histograms of image'''
     bHist = cv2.calcHist([img],[0],None,[256],[0,256])
@@ -15,9 +13,23 @@ def calc_hist(img):
     rHist = cv2.calcHist([img],[2],None,[256],[0,256])
     return bHist,gHist,rHist
 
+def findMean(hist):
+    hist = np.reshape(hist,(256,))
+    bins = list(range(256))
+    return (np.dot(hist,bins))/sum(hist)
+
+def findMedian(hist):
+    hist = np.reshape(hist,(256,))
+    median = sum(hist)/2
+    total_sum = 0
+    for i in range(len(hist)):
+        total_sum+=hist[i]
+        if median <= total_sum:
+            return i
+
 def fit_predict_HMM(X,y,lengths=None,n_components=3):
     '''fitting hmm to 2d array X and returning predictions on y'''
-    model = hmm.GaussianHMM(n_components=3)
+    model = hmm.GaussianHMM(n_components=n_components)
     model.fit(X,lengths=lengths)
     preds = model.predict(y)
     return preds
@@ -55,45 +67,84 @@ def save_output(frames,preds,n_classes):
     #savepath
     save_path = 'shot_segmentation/hmm_output/'
 
-    folder_no = 1
+    print("Total no. of frames in video", len(frames))
+
+    print("Preds", preds)
+
+    for x in classes:
+        print("Class", x)
+        print("No. of frames", len(classes[x]))
+
+    save_no = 1
     for i in classes:
         frames = classes[i]
+        height , width , layers =  frames[0].shape
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         if i == str(maj):
-            folder_name = 'gameplay'
+            save_name = 'gameplay'
+            video = cv2.VideoWriter(save_path+save_name+'.mp4',fourcc,1,(width,height))
             for j in range(len(frames)):
-                cv2.imwrite(save_path+folder_name+"/"+str(j)+".jpg", frames[j])
+                # cv2.imwrite(save_path+folder_name+"/"+str(j)+".jpg", frames[j])
+                video.write(frames[j])
         else:
-            folder_name = 'other'+str(folder_no)
+            save_name = 'other'+str(save_no)
+            video = cv2.VideoWriter(save_path+save_name+'.mp4',fourcc,1,(width,height))
             for j in range(len(frames)):
-                cv2.imwrite(save_path+folder_name+"/"+str(j)+".jpg", frames[j])
-            folder_no += 1
+                # cv2.imwrite(save_path+folder_name+"/"+str(j)+".jpg", frames[j])
+                video.write(frames[j])
+            save_no += 1
+    cv2.destroyAllWindows()
+    video.release()
 
-videoFile = 'shot_segmentation/test1.mp4'
-# videoFile = 'shot_segmentation/trimmed_shots.mp4'
-sec = 0
-frameRate = 1
-cap = cv2.VideoCapture(videoFile)
+def train_predict(videoFile,sec=0,frameRate=0.04):
+    frames = []
+    cap = cv2.VideoCapture(videoFile)
 
-bModes = []
-gModes = []
-rModes = []
+    bArray = []
+    gArray = []
+    rArray = []
 
-while cap.isOpened(): 
-    #setting current video position for 25fps capture
-    sec = round(sec + frameRate,2)
-    cap.set(cv2.CAP_PROP_POS_MSEC, sec*1000)
-    hasFrames, image = cap.read()
-    if hasFrames:      
-        frames.append(image)  
-        bHist,gHist,rHist = calc_hist(image)
-        #adding mode of each histogram to list
-        bModes.append(np.argmax(bHist))
-        gModes.append(np.argmax(gHist))
-        rModes.append(np.argmax(rHist))
-    else:
-        cap.release()
+    while cap.isOpened(): 
+        #setting current video position for 25fps capture
+        sec = round(sec + frameRate,2)
+        cap.set(cv2.CAP_PROP_POS_MSEC, sec*1000)
+        hasFrames, image = cap.read()
+        if hasFrames:      
+            frames.append(image)  
+            bHist,gHist,rHist = calc_hist(image)
+            #adding mode of each histogram to list
+            bArray.append(np.argmax(bHist))
+            gArray.append(np.argmax(gHist))
+            rArray.append(np.argmax(rHist))
+            # # adding mean of each histogram to list
+            # bArray.append(findMean(bHist))
+            # gArray.append(findMean(gHist))
+            # rArray.append(findMean(rHist))
+            # # adding median of each histogram to list
+            # bArray.append(findMedian(bHist))
+            # gArray.append(findMedian(gHist))
+            # rArray.append(findMedian(rHist))
+        else:
+            cap.release()
 
-histArray = np.column_stack([bModes,gModes,rModes])
-preds = fit_predict_HMM(histArray,histArray,n_components=3)
-# check_output(frames,preds,3)
-save_output(frames,preds,3)
+    histArray = np.column_stack([bArray,gArray,rArray])
+    preds = fit_predict_HMM(histArray,histArray,n_components=3)
+    return preds
+        
+if __name__ == '__main__':
+    
+    # videoFile = 'shot_segmentation/test1.mp4'
+    # videoFile = 'shot_segmentation/trimmed_shots.mp4'
+    videoFile = 'shot_segmentation/shots2.mp4'
+    # videoFile = 'shot_segmentation/transitions2.mp4'
+    # videoFile = 'shot_segmentation/other_transitions.mp4'
+    
+    sec = 0
+    frameRate = 0.04
+    
+    preds = train_predict(videoFile,0,0.4)
+    print(preds)
+    # check_output(frames,preds,3)
+    # save_output(frames,preds,3)
+
+
