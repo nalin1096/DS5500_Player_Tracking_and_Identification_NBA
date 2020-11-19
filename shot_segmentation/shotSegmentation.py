@@ -142,7 +142,7 @@ if __name__ == '__main__':
     sec = 0
     frameRate = 0.04
     
-    preds = train_predict(videoFile,0,0.4)
+    preds = train_predict(videoFile,sec,frameRate)
     print(preds)
     # check_output(frames,preds,3)
     # save_output(frames,preds,3)
