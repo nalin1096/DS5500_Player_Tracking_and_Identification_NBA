@@ -196,8 +196,8 @@ if __name__ == '__main__':
     our_player_tracking = trim_low_confidence(our_player_tracking_all)
 
     #read in the frames split from FFmpeg on the video input as RGB
-    all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob('./test_images/*.png'))]
-
+    all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob('/Users/dgrubis/Desktop/DS5500/repo/DS5500_Player_Tracking_and_Identification_NBA/demo_sample/test_frames/*.png'))]
+    
     #first clustering approach to distinguish the players from fans, refs, bench, etc.
     our_player_tracking = separate_players_and_noise(our_player_tracking, all_frames)
 
