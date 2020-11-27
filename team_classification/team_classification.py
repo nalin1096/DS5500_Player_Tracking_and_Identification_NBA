@@ -178,7 +178,7 @@ def center_of_mass(json):
             #rhip_conf = json[image_id][player_id]['keypoints'][38]
 
             hip_x_avg = (lhip_x + rhip_x) / 2.0
-            hip_y_avg = (lhip_y + rhip_x) / 2.0
+            hip_y_avg = (lhip_y + rhip_y) / 2.0
 
             json[image_id][player_id]['x'] = hip_x_avg
             json[image_id][player_id]['y'] = hip_y_avg
