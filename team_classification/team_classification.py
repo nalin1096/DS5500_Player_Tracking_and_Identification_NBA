@@ -169,19 +169,17 @@ def classify_teams(json, all_images):
 def center_of_mass(json):
     for image_id in json:
         for player_id in json[image_id]:
-            lhip_x = json[image_id][player_id]['keypoints'][33]
-            lhip_y = json[image_id][player_id]['keypoints'][34]
-            #lhip_conf = json[image_id][player_id]['keypoints'][35]
+            lankle_x = json[image_id][player_id]['keypoints'][45]
+            lankle_y = json[image_id][player_id]['keypoints'][46]
 
-            rhip_x = json[image_id][player_id]['keypoints'][36]
-            rhip_y = json[image_id][player_id]['keypoints'][37]
-            #rhip_conf = json[image_id][player_id]['keypoints'][38]
+            rankle_x = json[image_id][player_id]['keypoints'][48]
+            rankle_y = json[image_id][player_id]['keypoints'][49]
 
-            hip_x_avg = (lhip_x + rhip_x) / 2.0
-            hip_y_avg = (lhip_y + rhip_y) / 2.0
+            ankle_x_avg = (lankle_x + rankle_x) / 2.0
+            ankle_y_avg = (lankle_y + rankle_y) / 2.0
 
-            json[image_id][player_id]['x'] = hip_x_avg
-            json[image_id][player_id]['y'] = hip_y_avg
+            json[image_id][player_id]['x'] = ankle_x_avg
+            json[image_id][player_id]['y'] = ankle_y_avg
     return json
 
 if __name__ == '__main__':
@@ -197,7 +195,7 @@ if __name__ == '__main__':
 
     #read in the frames split from FFmpeg on the video input as RGB
     all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob('/Users/dgrubis/Desktop/DS5500/repo/DS5500_Player_Tracking_and_Identification_NBA/demo_sample/test_frames/*.png'))]
-    
+
     #first clustering approach to distinguish the players from fans, refs, bench, etc.
     our_player_tracking = separate_players_and_noise(our_player_tracking, all_frames)
 
