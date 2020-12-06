@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
+
 # import the necessary packages
 import numpy as np
 import imutils
@@ -86,16 +89,24 @@ def court_features(final, threshold, values, innerkeys):
 
 def get_court_tracking(frames_dir, output_dir):
     #These are the thresholds identified for each template based on their distribution w.r.t the test video
-    threshold=[40000000, 10000000, 9100000, 30000000, 6500000, 12000000]
+    threshold=[40000000, 10000000, 9100000, 30000000, 6500000, 12000000, 40000000, 13000000, 8500000, 16000000, 700000, 3500000, 40000000]
 
     #These values represent the court points within each template that were manually picked
-    values=[{'A': (114,14),'B': (34,119),'C': (220,68)},
-            {'D': (18,31),'E': (52,7)},
-            {'F': (42,10),'G': (14,30)},
-            {'H': (317,66),'I': (82,3), 'J': (12,84)},
-            {'K': (21,7), 'L': (7,21)},
-            {'M': (16,7)}]
-    innerkeys={'A':(),'B':(),'C':(),'D':(),'E':(),'F':(),'G':(),'H':(), 'I':(), 'J':(), 'K':(), 'L':(), 'M':()}
+    values=[{'AL': (114,14),'BL': (34,119),'CL': (220,68)},
+        {'DL': (18,31),'EL': (52,7)},
+        {'FL': (42,10),'GL': (14,30)},
+        {'HL': (317,66),'IL': (82,3), 'JL': (12,84)},
+        {'KL': (21,7), 'LL': (7,21)},
+        {'ML': (16,7)},
+        {'AR': (126,19),'BR': (223,130),'CR': (3,75)},
+        {'DR': (53,34),'ER': (22,12)},
+        {'FR': (17,8),'GR': (44,26)},
+        {'HR': (20,52),'IR': (244,5), 'JR': (311,87)},
+        {'KR': (26,8), 'LR': (43,23)},
+        {'MR': (22,11)},
+        {'ZZ': (230,50)}]
+    innerkeys={'AL':(),'BL':(),'CL':(),'DL':(),'EL':(),'FL':(),'GL':(),'HL':(), 'IL':(), 'JL':(), 'KL':(), 'LL':(), 'ML':(),
+              'AR':(),'BR':(),'CR':(),'DR':(),'ER':(),'FR':(),'GR':(),'HR':(),'IR':(),'JR':(),'KR':(),'LR':(),'MR':(),'ZZ':()}
     final = court_templates(frames_dir)
     result = court_features(final, threshold, values, innerkeys)
 
