@@ -166,23 +166,21 @@ def classify_teams(json, all_frames):
                 json[image_id][player_id]['team'] = int(clusters[i])
     return json
 
-#histograms show more confidence in finding hips than ankles so will use average of hips to get center of mass x,y
+#need to use ankles to get accurate results
 def center_of_mass(json):
     for image_id in json:
         for player_id in json[image_id]:
-            lhip_x = json[image_id][player_id]['keypoints'][33]
-            lhip_y = json[image_id][player_id]['keypoints'][34]
-            #lhip_conf = json[image_id][player_id]['keypoints'][35]
+            lankle_x = json[image_id][player_id]['keypoints'][45]
+            lankle_y = json[image_id][player_id]['keypoints'][46]
 
-            rhip_x = json[image_id][player_id]['keypoints'][36]
-            rhip_y = json[image_id][player_id]['keypoints'][37]
-            #rhip_conf = json[image_id][player_id]['keypoints'][38]
+            rankle_x = json[image_id][player_id]['keypoints'][48]
+            rankle_y = json[image_id][player_id]['keypoints'][49]
 
-            hip_x_avg = (lhip_x + rhip_x) / 2.0
-            hip_y_avg = (lhip_y + rhip_x) / 2.0
+            ankle_x_avg = (lankle_x + rankle_x) / 2.0
+            ankle_y_avg = (lankle_y + rankle_y) / 2.0
 
-            json[image_id][player_id]['x'] = hip_x_avg
-            json[image_id][player_id]['y'] = hip_y_avg
+            json[image_id][player_id]['x'] = ankle_x_avg
+            json[image_id][player_id]['y'] = ankle_y_avg
     return json
 
 def get_team_classification(frames_dir, output_dir):
