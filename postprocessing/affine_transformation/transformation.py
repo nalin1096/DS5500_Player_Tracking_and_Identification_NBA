@@ -5,8 +5,6 @@ import pandas as pd
 import numpy as np
 import math
 
-import cv2
-
 from sklearn.linear_model import LinearRegression
 
 def build_training(court_json, player_json):
@@ -48,9 +46,6 @@ if __name__ == "__main__":
         court_json = json.load(court)
     with open('./test_data/player_tracking_w_teams.json') as player:
         player_json = json.load(player)
-
-    #read in the frames from user videp
-    all_frames = [cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2RGB) for image in sorted(glob.glob('/Users/dgrubis/Desktop/DS5500/repo/DS5500_Player_Tracking_and_Identification_NBA/demo_sample/test_frames/*.png'))]
 
     #Create dictionary to store court coordinates as a tuple of each keypoint
     #TODO: once court model is done update this to the new court keypoints
