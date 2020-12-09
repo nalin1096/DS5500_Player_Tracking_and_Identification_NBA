@@ -49,19 +49,32 @@ if __name__ == "__main__":
 
     #Create dictionary to store court coordinates as a tuple of each keypoint
     #TODO: once court model is done update this to the new court keypoints
-    court_keypoints = {'A': (-28,8),
-                    'B': (-28,-8),
-                    'C': (-22,0),
-                    'D': (-47,-11),
-                    'E': (-47,-8),
-                    'F': (-47,11),
-                    'G': (-47,8),
-                    'H': (-17,0),
-                    'I': (-28,6),
-                    'J': (-28,6),
-                    'K': (-47,25),
-                    'L': (-47,22),
-                    'M': (-19,25)}
+    court_keypoints = {'AL': (-28,8),
+                    'BL': (-28,-8),
+                    'CL': (-22,0),
+                    'DL': (-47,-11),
+                    'EL': (-47,-8),
+                    'FL': (-47,11),
+                    'GL': (-47,8),
+                    'HL': (-17,0),
+                    'IL': (-28,6),
+                    'JL': (-28,6),
+                    'KL': (-47,25),
+                    'LL': (-47,22),
+                    'ML': (-19,25),
+                    'AR': (28,8),
+                    'BR': (28,-8),
+                    'CR': (22,0),
+                    'DR': (47,-11),
+                    'ER': (47,-8),
+                    'FR': (47,11),
+                    'GR': (47,8),
+                    'HR': (17,0),
+                    'IR': (28,6),
+                    'JR': (28,6),
+                    'KR': (47,25),
+                    'LR': (47,22),
+                    'MR': (19,25)}
 
     #build training data from court tracking output
     training = build_training(court_json, player_json)
