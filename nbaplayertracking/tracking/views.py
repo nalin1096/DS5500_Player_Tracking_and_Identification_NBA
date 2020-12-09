@@ -33,6 +33,8 @@ def video_results(request, results_id):
         'videofile': video_obj.videofile,
         'player_tracking_results': video_obj.player_tracking_file,
         'court_tracking_results': video_obj.court_tracking_file,
-        'ocr_results': video_obj.ocr_file
+        'ocr_results': video_obj.ocr_file,
+        'player_tracking_transforation_results': video_obj.player_tracking_transformation_file,
+        'player_tracking_smoothing_results': video_obj.player_tracking_smoothing_file
     }
     return render(request, 'tracking/video_results.html', context)

@@ -16,11 +16,13 @@ import json
 def court_templates(frames_dir):
 
     video_frames = sorted(glob.glob(os.path.join(frames_dir, '*.png')))
+    print(video_frames[:2])
 
     final = {}
 
     # load the image, convert it to grayscale, and detect edges
     template_list = glob.glob(os.path.join(os.getcwd(), 'tracking/utils/court_templates/*.JPG'))
+    print(template_list[:2])
     len_template = len(template_list)
 
     for frame in video_frames:
