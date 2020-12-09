@@ -6,7 +6,6 @@ from pathlib import Path
 
 import dramatiq
 from django.conf import settings
-from django.core.mail import send_mail
 
 from .models import Video
 from .utils import shot_segmentation, court_tracking, ocr, team_classification, helper, \
@@ -40,7 +39,7 @@ def get_tracking(id):
     team_classification.get_team_classification(segmented_frames_dir, results_dir)
     player_tracking_filepath = os.path.join('tracking', 'tracking_results', filename, 'player_tracking_results.json')
     video_obj.player_tracking_file = player_tracking_filepath
-    
+
     # Court Tracking
     court_tracking.get_court_tracking(segmented_frames_dir, results_dir)
     court_tracking_filepath = os.path.join('tracking', 'tracking_results', filename, 'court_tracking_results.json')
@@ -69,13 +68,7 @@ def get_tracking(id):
     # create unique ID for video
     video_obj.results_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
-    send_mail(
-        'Your video is ready!',
-        'Please go to the following link \n\n localhost:8000/video_results/' + str(video_obj.results_id),
-        'nalin1096@hotmail.com',
-        [video_obj.email],
-        fail_silently=False,
-    )
+    helper.send_email_to_user(video_obj)
 
     video_obj.save()
 
