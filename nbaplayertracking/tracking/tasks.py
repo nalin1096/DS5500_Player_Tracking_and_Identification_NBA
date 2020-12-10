@@ -9,7 +9,7 @@ from django.conf import settings
 
 from .models import Video
 from .utils import shot_segmentation, court_tracking, ocr, team_classification, helper, \
-    player_tracking_transformation, player_tracking_smoothing
+    player_tracking_transformation, player_tracking_smoothing, play_by_play
 
 
 @dramatiq.actor
@@ -49,6 +49,11 @@ def get_tracking(id):
     ocr.get_ocr(segmented_frames_dir, results_dir)
     ocr_filepath = os.path.join('tracking', 'tracking_results', filename, 'ocr_results.json')
     video_obj.ocr_file = ocr_filepath
+
+    # Play-by-Play
+    play_by_play.get_play_by_play(os.path.join(settings.BASE_DIR, 'media', ocr_filepath), results_dir)
+    ocr_with_players_filepath = os.path.join('tracking', 'tracking_results', filename, 'ocr_with_players_results.json')
+    video_obj.ocr_with_players_file = ocr_with_players_filepath
 
     # Post Processing
     player_tracking_transformation.postprocess_coordinates(os.path.join(settings.BASE_DIR, 'media', player_tracking_filepath),

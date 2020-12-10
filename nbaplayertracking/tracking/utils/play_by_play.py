@@ -1,4 +1,4 @@
-import json
+import os
 import pandas as pd
 import requests
 import json
@@ -10,7 +10,7 @@ SEASON = '2015-16'
 SEASON_TYPE = 'Regular+Season' # 'Regular+Season' or 'Playoffs'
 HOME_TEAM = 'LAL'
 
-header_data  = {
+header_data = {
     'Connection': 'keep-alive',
     'Accept': 'application/json, text/plain, */*',
     'x-nba-stats-token': 'true',
@@ -187,7 +187,7 @@ def encode_quarter(quarter):
 def new_json_format(my_dict):
     ''' better organzition by nesting players on the court info  '''
     new_dict = defaultdict(dict)
-    for frame_id in ocr_pbp_dict:
+    for frame_id in my_dict:
         game_clock = my_dict[frame_id]['game_clock']
         quarter = my_dict[frame_id]['game_clock']
         team1_id = my_dict[frame_id]['TEAM1_ID']
@@ -239,10 +239,10 @@ class PlayByPlay:
         return final_pbp
 
 
-if __name__ == "__main__":
+def get_play_by_play(ocr_results_filepath, results_dir):
 
     #read in the ocr results
-    with open('./data/ocr_results.json') as ocr:
+    with open(ocr_results_filepath) as ocr:
         ocr_json = json.load(ocr)
 
     #extract play by play data for the game uploaded
@@ -275,5 +275,5 @@ if __name__ == "__main__":
     ocr_pbp_new = new_json_format(ocr_pbp_dict)
 
     #export the final ocr json
-    with open('./data/ocr_w_players.json', 'w') as output:
+    with open(os.path.join(results_dir, 'ocr_with_players_results.json'), 'w') as output:
         json.dump(ocr_pbp_new, output)

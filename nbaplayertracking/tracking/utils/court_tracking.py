@@ -22,7 +22,7 @@ def court_templates(frames_dir):
 
     # load the image, convert it to grayscale, and detect edges
     template_list = sorted(glob.glob(os.path.join(os.getcwd(), 'tracking/utils/court_templates/*.JPG')))
-    print(template_list[:2])
+    print(template_list)
     len_template = len(template_list)
 
     for frame in video_frames:

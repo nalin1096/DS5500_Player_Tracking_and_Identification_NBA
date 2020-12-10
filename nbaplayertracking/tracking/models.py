@@ -1,5 +1,4 @@
 import uuid
-import os
 from django.db import models
 
 
@@ -55,6 +54,7 @@ class Video(models.Model):
     player_tracking_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
     court_tracking_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
     ocr_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
+    ocr_with_players_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
     player_tracking_transformation_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
     player_tracking_smoothing_file = models.FileField(upload_to='tracking/tracking_results', null=True, verbose_name="", max_length=1000)
 

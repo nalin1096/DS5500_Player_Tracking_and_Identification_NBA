@@ -34,6 +34,7 @@ def video_results(request, results_id):
         'player_tracking_results': video_obj.player_tracking_file,
         'court_tracking_results': video_obj.court_tracking_file,
         'ocr_results': video_obj.ocr_file,
+        'ocr_with_players_results': video_obj.ocr_with_players_file,
         'player_tracking_transforation_results': video_obj.player_tracking_transformation_file,
         'player_tracking_smoothing_results': video_obj.player_tracking_smoothing_file
     }
