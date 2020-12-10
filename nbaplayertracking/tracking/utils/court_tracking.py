@@ -21,7 +21,7 @@ def court_templates(frames_dir):
     final = {}
 
     # load the image, convert it to grayscale, and detect edges
-    template_list = glob.glob(os.path.join(os.getcwd(), 'tracking/utils/court_templates/*.JPG'))
+    template_list = sorted(glob.glob(os.path.join(os.getcwd(), 'tracking/utils/court_templates/*.JPG')))
     print(template_list[:2])
     len_template = len(template_list)
 
@@ -91,10 +91,11 @@ def court_features(final, threshold, values, innerkeys):
 
 def get_court_tracking(frames_dir, output_dir):
     #These are the thresholds identified for each template based on their distribution w.r.t the test video
-    threshold=[40000000, 10000000, 9100000, 30000000, 6500000, 12000000, 40000000, 13000000, 8500000, 16000000, 700000, 3500000, 40000000]
+    threshold=[40000000, 40000000, 10000000, 9100000, 30000000, 6500000, 12000000, 40000000, 13000000, 8500000, 16000000, 700000, 3500000]
 
     #These values represent the court points within each template that were manually picked
-    values=[{'AL': (114,14),'BL': (34,119),'CL': (220,68)},
+    values=[{'ZZ': (230,50)},
+	{'AL': (114,14),'BL': (34,119),'CL': (220,68)},
         {'DL': (18,31),'EL': (52,7)},
         {'FL': (42,10),'GL': (14,30)},
         {'HL': (317,66),'IL': (82,3), 'JL': (12,84)},
@@ -105,10 +106,9 @@ def get_court_tracking(frames_dir, output_dir):
         {'FR': (17,8),'GR': (44,26)},
         {'HR': (20,52),'IR': (244,5), 'JR': (311,87)},
         {'KR': (26,8), 'LR': (43,23)},
-        {'MR': (22,11)},
-        {'ZZ': (230,50)}]
-    innerkeys={'AL':(),'BL':(),'CL':(),'DL':(),'EL':(),'FL':(),'GL':(),'HL':(), 'IL':(), 'JL':(), 'KL':(), 'LL':(), 'ML':(),
-              'AR':(),'BR':(),'CR':(),'DR':(),'ER':(),'FR':(),'GR':(),'HR':(),'IR':(),'JR':(),'KR':(),'LR':(),'MR':(),'ZZ':()}
+        {'MR': (22,11)}]
+    innerkeys={'ZZ':(),'AL':(),'BL':(),'CL':(),'DL':(),'EL':(),'FL':(),'GL':(),'HL':(), 'IL':(), 'JL':(), 'KL':(), 'LL':(), 'ML':(),
+              'AR':(),'BR':(),'CR':(),'DR':(),'ER':(),'FR':(),'GR':(),'HR':(),'IR':(),'JR':(),'KR':(),'LR':(),'MR':()}
     final = court_templates(frames_dir)
     result = court_features(final, threshold, values, innerkeys)
 
